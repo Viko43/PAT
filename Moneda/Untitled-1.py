@@ -1,25 +1,63 @@
-def cambiar_moneda():
+def calcular_cambio(monto, inventario):
     
-    denominaciones = [500, 200, 100, 50, 20, 10, 5, 2, 1]
+    denominaciones = sorted(inventario.keys(), reverse=True)
+    cambio = {}
+    restante = monto
+
+    for d in denominaciones:
+        disponibles = inventario[d]
+        requeridos = restante // d
+        usar = min(disponibles, requeridos)
+
+        if usar > 0:
+            cambio[d] = usar
+            restante -= usar * d
+
+    if restante == 0:
+        return cambio
+    else:
+        return None
     
-    while True:
+inventario = {
+    500: 10,
+    200: 12,
+    100: 15,
+    50: 20,
+    20: 15,
+    10: 30,
+    5: 20,
+    2: 30,
+    1: 90
+}
 
-        try:
-            cantidad = int(input())
-            
-            if cantidad == 0:
-                break
-            print(cantidad)
-            for denominaciones in denominaciones:
-                cantidad_billetes = cantidad // denominaciones
+def mostrar_inventario(inv):
+    print("\nInventario actual de billetes/monedas:")
+    for denom in sorted(inv.keys(), reverse=True):
+        print(f"{denom}: {inv[denom]} disponibles")
 
-                if cantidad_billetes > 0:
-                    print(f"{cantidad_billetes} de {denominaciones}")
-                    cantidad %= denominaciones
-        except ValueError:
-            print("Numero invalido, ingresa otra cantidad")
+while True:
+    mostrar_inventario(inventario)
 
-if __name__ == "__main__":
-    cambiar_moneda()
+    try:
+        entrada = input("\nIngresa la cantidad a cambiar : ")
+        monto = int(entrada)
 
-#TRABAJAMOS VICTOR MANUEL LANDEROS CANO Y MORENO RODRIGUEZ ROBERTO 
+        if monto == 0:
+            print()
+            break
+
+      
+        resultado = calcular_cambio(monto, inventario.copy())
+
+        if resultado:
+            print(f"\nCambio para {monto}€:")
+            for d in sorted(resultado.keys(), reverse=True):
+                print(f"{resultado[d]} de {d}")
+
+            for d, cantidad in resultado.items():
+                inventario[d] -= cantidad
+        else:
+            print(f"\nNo es posible dar el cambio exacto para {monto}€ con las denominaciones disponibles.")
+
+    except ValueError:
+        print("Por favor, ingresa un número entero válido.")
