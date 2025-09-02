@@ -9,7 +9,7 @@ public class Cuenta{
 
     private String titular;
 
-    private Cuenta(String numeroCuenta,String pin,double saldoInicial,String titular){
+    public Cuenta(String numeroCuenta,String pin,double saldoInicial,String titular){
         this.numeroCuenta = numeroCuenta;
         this.pin = pin;
         this.saldo = saldoInicial;
@@ -23,14 +23,15 @@ public class Cuenta{
     public boolean valdiarPin(String pinIngresado){
         return this.pin.equals(pinIngresado);
     }
-    public boolean retirar(double cantidad){
-        if(cantidad > 0 && cantidad <= this.saldo){
+    public boolean retirar(double cantidad) {
+        if (cantidad > 0 && cantidad <= this.saldo) {
             saldo -= cantidad;
             return true;
         }
         return false;
+    }
 
-        public void depositar( double cantidad){
+        public void depositar(double cantidad){
             if(cantidad > 0){
                 saldo += cantidad;
             }
@@ -38,4 +39,3 @@ public class Cuenta{
 
         //Tarea diseñar los comportamientos restantes
     }
-}

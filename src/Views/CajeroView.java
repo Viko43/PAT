@@ -3,60 +3,61 @@ package Views;
 import java.util.Scanner;
 
 public class CajeroView {
-    private Scanner sc;
+    private Scanner scanner;
     public CajeroView() {
-        sc = new Scanner(System.in);
+        scanner = new Scanner(System.in);
     }
-
-    public void mostrarCajero() {
-        System.out.println("=======================");
-        System.out.println("Bienvenido al cajero");
-        System.out.println("=======================");
+    public void mostrarBienvenida(){
+        System.out.println("===========");
+        System.out.println("Bienvenido al Cajero");
+        System.out.println("============");
     }
-    public String solicitarNumeroCuenta() {
+    public String solicitarNumeroCuenta(){
         System.out.println("Ingresa tu numero de cuenta: ");
-        return sc.nextLine();
+        return scanner.nextLine();
     }
-    public String solicitarPIN() {
-        System.out.println("Ingresa PIN");
-        return sc.nextLine();
+    public String solicitarPin(){
+        System.out.println("Ingresa una pin: ");
+        return scanner.nextLine();
     }
-    public void mostrarMenuPrincipal() {
-        System.out.println("=========================");
-        System.out.println("Bienvenido"+titular);
-        System.out.println("========================");
-        System.out.println("1.-Consultar Saldo");
-        System.out.println("2.- Retirar");
-        System.out.println("3.- Depositar");
-        //Poner las faltantes
-        System.out.println("9.- Salir");
+    public void mostrarMenu(String titular){
+        System.out.println("==================");
+        System.out.println("Bienvenido: " + titular);
+        System.out.println("==================");
+        System.out.println("1. Consultar saldo");
+        System.out.println("2. Retirar saldo");
+        System.out.println("3. Depositar saldo");
+        //definir las opciones faltantes
+        System.out.println("9. Salir");
+
     }
 
     public int leerOpcion(){
         try{
-            return Integer.parseInt(sc.nextLine());
+            return Integer.parseInt(scanner.nextLine());
         }catch(NumberFormatException e){
             return -1;
         }
     }
+    public void mostrarSaldo(double saldo){
+        System.out.println("================");
+        System.out.println("tu saldo actual es: $" + saldo);
+        System.out.println("===============");
 
-    public void mostrarSaldo() {
-        System.out.println("===================");
-        System.out.println("Tu saldo es:"+ saldo);
-        System.out.println("====================");
     }
-    public double solitarCantidad() {
-        System.out.println("Ingresa la camtidad "+ operacion+" : ");
+
+    public double solicitarCantidad(String operacion){
+        System.out.println("Ingrese la cantidad a " + operacion+": ");
         try{
-            return Double.parseDouble(sc.nextLine());
-        }catch(NumberFormatException e){
+            return Double.parseDouble(scanner.nextLine());
+        }catch (NumberFormatException e){
             return -1;
         }
     }
 
     public void mostrarMensaje(String mensaje){
-        System.out.println("===="+mensaje);
+        System.out.println("===== "+mensaje);
     }
-
-
+    //personalizar mensajes de error y de exito
+    //metodo para salir y cerrar el scanner
 }
