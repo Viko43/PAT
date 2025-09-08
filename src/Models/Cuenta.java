@@ -1,28 +1,51 @@
 package Models;
 
-public class Cuenta{
-    private String numeroCuenta;
+public class Cuenta<T> {
+    private T numeroCuenta;  // Número de cuenta genérico (String, Integer, etc.)
+    private String pin;      // PIN de 4 dígitos
+    private double saldo;    // Saldo en la cuenta
+    private T titular;       // Titular de la cuenta (String u otro objeto)
 
-    private String pin;
-
-    private double saldo;
-
-    private String titular;
-
-    public Cuenta(String numeroCuenta,String pin,double saldoInicial,String titular){
+    public Cuenta(T numeroCuenta, String pin, double saldo, T titular) {
         this.numeroCuenta = numeroCuenta;
         this.pin = pin;
-        this.saldo = saldoInicial;
+        this.saldo = saldo;
         this.titular = titular;
     }
-    public String getNumeroCuenta(){return numeroCuenta;}
-    public String getPin(){return pin;}
-    public double getSaldo(){return saldo;}
-    public String getTitular(){return titular;}
 
-    public boolean valdiarPin(String pinIngresado){
+    // Getters y Setters
+    public T getNumeroCuenta() {
+        return numeroCuenta;
+    }
+    public void setNumeroCuenta(T numeroCuenta) {
+        this.numeroCuenta = numeroCuenta;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+
+    public T getTitular() {
+        return titular;
+    }
+    public void setTitular(T titular) {
+        this.titular = titular;
+    }
+
+    public boolean validarPin(String pinIngresado) {
         return this.pin.equals(pinIngresado);
     }
+
     public boolean retirar(double cantidad) {
         if (cantidad > 0 && cantidad <= this.saldo) {
             saldo -= cantidad;
@@ -31,11 +54,17 @@ public class Cuenta{
         return false;
     }
 
-        public void depositar(double cantidad){
-            if(cantidad > 0){
-                saldo += cantidad;
-            }
-        }
-
-        //Tarea diseñar los comportamientos restantes
+    public boolean cambiarPin(String pinActual, String nuevoPin) {
+        if (pinActual == null || nuevoPin == null) return false;
+        if (!this.pin.equals(pinActual)) return false;
+        if (!nuevoPin.matches("\\d{4}")) return false;
+        this.pin = nuevoPin;
+        return true;
     }
+
+    public void depositar(double cantidad) {
+        if (cantidad > 0) {
+            saldo += cantidad;
+        }
+    }
+}
