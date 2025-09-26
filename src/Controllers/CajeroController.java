@@ -1,5 +1,11 @@
 package Controllers;
+
 import Models.CajeroModel;
+import Models.Cuenta;
+import Models.Operacion;
+import Models.OperacionRetiro;
+import Models.OperacionDeposito;
+import Models.OperacionConsulta;
 import Views.CajeroView;
 
 
@@ -8,6 +14,7 @@ public class CajeroController {
     private CajeroView view;
     private boolean sistemaActivo;
 
+    private Operacion operacion; // Estrategia actual
 
     public CajeroController(CajeroModel model, CajeroView view){
         this.model = model;
@@ -15,6 +22,20 @@ public class CajeroController {
         this.sistemaActivo = true;
     }
 
+    // Setter de estrategia
+    public void setOperacion(Operacion operacion) {
+        this.operacion = operacion;
+    }
+
+    // Ejecutar estrategia
+    public void ejecutarOperacion(double monto) {
+        if (operacion != null && model.getCuentaActual() != null) {
+            Cuenta cuenta = model.getCuentaActual();
+            operacion.ejecutar(cuenta, monto);
+        } else {
+            view.mostrarMensaje("No hay operación definida o cuenta activa.");
+        }
+    }
 
     public void iniciarSistema(){
         view.mostrarBienvenida();
@@ -41,33 +62,40 @@ public class CajeroController {
             view.mostrarMenuPrincipal(model.getCuentaActual().getTitular());
             int opcion = view.leerOpcion();
             switch (opcion) {
-                case 1:
-                    consultarSaldo();
-
+                case 1: // Consulta saldo
+                    setOperacion(new OperacionConsulta());
+                    ejecutarOperacion(0);
                     break;
 
-                case 2:
-                    this.realizarRetiro();
+                case 2: // Retiro
+                    double retiro = view.solicitarCantidad("Retirar");
+                    setOperacion(new OperacionRetiro());
+                    ejecutarOperacion(retiro);
                     break;
 
-                case 3:
-                    this.realizarDeposito();
+                case 3: // Depósito
+                    double deposito = view.solicitarCantidad("Depositar");
+                    setOperacion(new OperacionDeposito());
+                    ejecutarOperacion(deposito);
                     break;
 
-                case 4:
+                case 4: // Transferencia (aún no la migramos a Strategy porque requiere 2 cuentas)
                     this.realizarTransferencia();
                     break;
 
-                case 5:
+                case 5: // Cambio de PIN
                     this.realizarCambioPin();
                     break;
 
-                case 6:
+                case 6: // Ver PIN
                     this.mostrarPin();
-                case 7:
+
+                case 7: // Salir
                     this.cerrarSistema();
                     sessionActiva = false;   // salir del menú
                     sistemaActivo = false;   // apagar el sistema completo
+                    sessionActiva = false;
+                    sistemaActivo = false;
                     break;
 
                 default:
@@ -83,7 +111,7 @@ public class CajeroController {
     }
 
     public void mostrarPin(){
-        String pin = model.consultarPIN();  // usar String, no double
+        String pin = model.consultarPIN();
         if(pin != null){
             view.mostrarMensaje("Tu PIN actual es: " + pin);
         } else {
@@ -120,6 +148,7 @@ public class CajeroController {
     }
 
 
+    // Transferencia todavía no la pasamos a Strategy (puede hacerse después)
     public void realizarTransferencia(){
         String cuentaDestino = view.solicitarCuentaDestino();
 
@@ -146,6 +175,7 @@ public class CajeroController {
             view.mostrarMensaje("Transferencia exitosa de $" + cantidad + " a la cuenta " + cuentaDestino);
         } else {
             view.mostrarMensaje("No se pudo completar la transferencia (fondos insuficientes o datos invalidos)");
+            view.mostrarMensaje("No se pudo completar la transferencia (fondos insuficientes o datos inválidos)");
         }
     }
 

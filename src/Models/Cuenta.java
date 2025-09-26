@@ -6,6 +6,7 @@ public class Cuenta<T> {
     private double saldo;    // Saldo en la cuenta
     private T titular;       // Titular de la cuenta (String u otro objeto)
 
+
     public Cuenta(T numeroCuenta, String pin, double saldo, T titular) {
         this.numeroCuenta = numeroCuenta;
         this.pin = pin;
@@ -14,6 +15,7 @@ public class Cuenta<T> {
     }
 
     // Getters y Setters
+
     public T getNumeroCuenta() {
         return numeroCuenta;
     }
